@@ -11,6 +11,7 @@
 	grid-template-columns: auto auto;
 	z-index: 2;
 	width: calc(100% - 48px);
+	min-width: 540px;
 }
 
 .sticky {
@@ -36,9 +37,96 @@
 	padding: 0 8px 0;
 	width: 72px;
 	justify-content: center;
+	transition: all 0.3s ease;
+	position: relative;
 }
 
 .filter:hover, .sort:hover, .bag:hover {
 	background: white;
 	color: black;
+}
+
+.floatMenu {
+	position: absolute;
+	top: 100%;
+	min-width: calc(100% - 16px);
+	width: auto;
+	right: 0;
+	z-index: 3;
+	background: black;
+	color: white;
+	padding: 8px;
+}
+
+.floatMenu.false {
+	display: none;
+}
+.size {
+	display: grid;
+	grid-template-columns: auto auto;
+	grid-column-gap: 0px;
+	align-items: center;
+
+}
+.container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: white;
+}
+
+/* On mouse-over, add a grey background color */
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+  background-color: white;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
 }

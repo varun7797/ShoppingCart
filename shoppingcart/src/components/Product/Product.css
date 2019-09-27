@@ -1,0 +1,83 @@
+.productWrapper {
+	text-align: left;
+	background: transparent;
+	display: inline-block;
+	padding-bottom: 16px;
+	text-align: center;
+	font-family: Helvetica Neue;
+	cursor: pointer;
+	position: relative;
+	margin: 16px;
+}
+
+.productImg{
+	max-width: 240px;
+}
+
+.title {
+	padding: 8px 8px 8px;
+	font-weight: bold;
+	font-size: 14px;
+	transition: all 0.3s ease;
+}
+.price {
+	padding: 0px 8px 8px;
+	font-size: 14px;
+	transition: all 0.3s ease;
+}
+
+.freeshipping{
+	font-size: 8px;
+	background: black;
+	color: white;
+	font-weight: bold;
+	height: 48px;
+	width: 48px;
+	display: flex;
+	align-items: center;
+	text-align: center;
+	border-radius: 100%;
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 1;
+}
+
+.addtobag {
+	width: 100%;
+	font-size: 14px;
+	font-weight: bold;
+	border-radius: 4px;
+	background: black;
+	color: white;
+	border: 2px solid black;
+	height: 40px;
+	outline: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.3s ease;
+	cursor: pointer;
+}
+
+
+.shoppingbag {
+	height: 16px;
+	margin-left: 4px;
+}
+
+.chooseSize {
+	width: 100%;
+	margin-bottom: 8px;
+	height: 40px;
+	font-weight: bold;
+	outline: none;
+	font-size: 14px;
+	background: white;
+	color: black;
+	border: 2px solid black;
+}
+
+.productList {
+	padding: 0 24px 0;
+}

@@ -75,8 +75,9 @@
 	background: white;
 	color: black;
 	border: 2px solid black;
+	
 }
 
 .productList {
-	padding: 0 24px 0;
+	padding: 64px 24px 0;
 }

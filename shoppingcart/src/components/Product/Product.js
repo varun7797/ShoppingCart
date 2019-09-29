@@ -1,41 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import data from '../../data/products.json'
-import inventory from '../../data/inventory.json'
 import './Product.css';
-
-class AddToBag extends Component {
-
-	render() {
-
-		return (
-			<button className="addtobag">
-				Add to bag
-			</button>
-
-			)
-	}
-
-}
-
-
-class ChooseSize extends Component {
-
-	render() {
-
-		return (
-			<select className="chooseSize">
-				<option disabled selected>Select a size</option>
-				<option>S</option>
-				<option>M</option>
-				<option>L</option>
-				<option>XL</option>				
-			</select>
-
-			)
-	}
-
-}
 
 class Product extends Component {
   
@@ -44,8 +10,30 @@ class Product extends Component {
     title: PropTypes.string,
     price: PropTypes.number,
     freeShipping: PropTypes.bool,
-    stock: PropTypes.array
+    stock: PropTypes.array,
+    onClick: PropTypes.func
   };
+
+	constructor(props) {
+	    super(props);
+
+	    this.state = {
+	   	 selectedSize: null
+	    };
+	  }
+
+    selectSize = (e) => {
+    	this.setState({
+    		selectedSize: e.target.value
+    	})
+    }
+
+
+	onClick = () => {
+		const {id, onClick} = this.props
+		const {selectedSize} = this.state
+		onClick(id, selectedSize)	
+	}
 
 
   render () {
@@ -61,8 +49,16 @@ class Product extends Component {
     		${price.toFixed(2)}
 		</div>
 		{freeShipping ? <div className="freeshipping">FREE SHIPPING</div> : null}
-		<ChooseSize/>
-		<AddToBag/>
+			<select onChange={this.selectSize} className="chooseSize">
+				<option disabled selected>Select a size</option>
+				<option>S</option>
+				<option>M</option>
+				<option>L</option>
+				<option>XL</option>				
+			</select>
+		<button onClick={this.onClick} className="addtobag">
+				Add to bag
+			</button>
     </div>
   );   
   }
@@ -73,7 +69,9 @@ class Products extends Component {
 
   static propTypes = {
     displaySizes: PropTypes.array,
-    sort: Products.string
+    sort: PropTypes.string,
+    onClick: PropTypes.func,
+    inventory: PropTypes.array
   };
 
 
@@ -99,10 +97,11 @@ class Products extends Component {
 
 		const products = Object.values(data)
 
-		const {displaySizes, sort} = this.props
+		const {displaySizes, sort, inventory} = this.props
 
 		let productList = products.map(x => {
 					 	return <Product
+					 				onClick={this.props.onClick}
 									id={x.sku}
 									title={x.title}
 									price={x.price}

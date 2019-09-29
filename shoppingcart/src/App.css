@@ -1,22 +1,25 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.error {
+  position: fixed;
+  top: 64px;
+  background: #7F0319;
+  width: 100%;
+  height: 32px;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+    font-family: DIN Condensed;
+    color: white;
 }
 
-.App-link {
-  color: #09d3ac;
+.added {
+  position: fixed;
+  top: 64px;
+  background: black;
+  width: 100%;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+    font-family: DIN Condensed;
+    color: white;
 }

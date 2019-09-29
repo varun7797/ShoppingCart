@@ -42,67 +42,74 @@ class App extends Component {
   }
 
   add = (product, size) => {
-    if (size) {
-      let newBag = []
-      if (!this.state.bag) {
-        newBag.push([product, size])
-      } else {
-        newBag = this.state.bag
-        newBag.push([product, size])
-      }
-      this.setState({
-        bag: newBag
-      })
-      this.showAdded()  
+    let newBag = []
+    let quantity = 1
+    if (!this.state.bag) {
+      newBag.push([product, size, quantity])
     } else {
-      this.showError()
+      newBag = this.state.bag
+      let x = (newBag.indexOf(newBag.find(x => ((x[0] === product) && (x[1] === size)))))
+      if (x >= 0) {
+        newBag[x][2] = newBag[x][2] + 1
+      } else {
+        newBag.push([product, size, quantity])
+      }
     }
+    this.setState({
+      bag: newBag
+    })
+    this.showAdded()  
   }
 
   addToBag = (product, size) => {
     const {inventory} = this.state
     let inv = inventory[product]
-    if (size === 'S') {
-      if(inv.S > 0) {
-        inv.S = inv.S - 1
-        this.add(product, size)
-      } else {
-        this.outOfStock()
-      }
+    if (size){
+      if (size === 'S') {
+        if(inv.S > 0) {
+          inv.S = inv.S - 1
+          this.add(product, size)
+        } else {
+          this.outOfStock()
+        }
 
-    }
-    if (size === 'M') {
-      if(inv.M > 0) {
-        inv.M = inv.M - 1
-        this.add(product, size)
-      } else {
-        this.outOfStock()
       }
+      if (size === 'M') {
+        if(inv.M > 0) {
+          inv.M = inv.M - 1
+          this.add(product, size)
+        } else {
+          this.outOfStock()
+        }
 
-    }
-    if (size === 'L') {
-      if(inv.L > 0) {
-        inv.L = inv.L - 1
-        this.add(product, size)
-      } else {
-        this.outOfStock()
       }
+      if (size === 'L') {
+        if(inv.L > 0) {
+          inv.L = inv.L - 1
+          this.add(product, size)
+        } else {
+          this.outOfStock()
+        }
 
-    }
-    if (size === 'XL') {
-      if(inv.XL > 0) {
-        inv.XL = inv.XL - 1
-        this.add(product, size)
-      } else {
-        this.outOfStock()
       }
+      if (size === 'XL') {
+        if(inv.XL > 0) {
+          inv.XL = inv.XL - 1
+          this.add(product, size)
+        } else {
+          this.outOfStock()
+        }
 
+      }
+      let newInv = inventory
+      newInv[product] = inv
+      this.setState({
+        inventory: newInv
+      })
+    }  
+     else {
+      this.showError()
     }
-    let newInv = inventory
-    newInv[product] = inv
-    this.setState({
-      inventory: newInv
-    })
   }
 
   outOfStock = () => {
@@ -119,7 +126,53 @@ class App extends Component {
 
 
   removeFromBag = (product) => {
-    console.log('x')
+    const {bag, inventory} = this.state
+    let bagItem = []
+    bagItem.push(product.split(','))
+    bagItem[0][0] = parseInt(bagItem[0][0], 10)
+    let prod = bagItem[0][0]
+    let size = bagItem[0][1]
+    let newBag = bag
+    let newInv = inventory
+    for(let i=0; i<newBag.length; i++) {
+      if ((newBag[i][0] == bagItem[0][0]) && (newBag[i][1] == bagItem[0][1])) {
+        if (newBag[i][2] > 1) {
+          newBag[i][2] = newBag[i][2] - 1
+          if (size === 'S') {
+            newInv[prod].S = newInv[prod].S + 1
+          }
+          if (size === 'M') {
+            newInv[prod].M = newInv[prod].M + 1
+          }
+          if (size === 'L') {
+            newInv[prod].L = newInv[prod].L + 1
+          }
+          if (size === 'XL') {
+            newInv[prod].XL = newInv[prod].XL + 1
+          }
+
+        } else {
+          newBag.splice(i, 1);
+          if (size === 'S') {
+            newInv[prod].S = newInv[prod].S + 1
+          }
+          if (size === 'M') {
+            newInv[prod].M = newInv[prod].M + 1
+          }
+          if (size === 'L') {
+            newInv[prod].L = newInv[prod].L + 1
+          }
+          if (size === 'XL') {
+            newInv[prod].XL = newInv[prod].XL + 1
+          }
+        }
+        break
+      }
+    }
+    this.setState({
+      bag: newBag,
+      inventory: newInv
+    })
   }
 
     showError = () => {

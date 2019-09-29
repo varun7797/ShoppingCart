@@ -11,7 +11,7 @@ class Product extends Component {
     price: PropTypes.number,
     freeShipping: PropTypes.bool,
     stock: PropTypes.array,
-    onClick: PropTypes.func
+    onClick: PropTypes.func,
   };
 
 	constructor(props) {

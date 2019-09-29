@@ -75,6 +75,10 @@ class BagMenu extends Component {
     onRemoveItem: PropTypes.func
     }
 
+	removeItem = (e) => {
+		this.props.onRemoveItem(e.target.id)
+	}
+
 
 	render () {
 
@@ -92,7 +96,8 @@ class BagMenu extends Component {
 							<div>{data[x[0]].title}</div>
 							<div>Size: {x[1]}</div>
 							<div>${data[x[0]].price.toFixed(2)}</div>
-							<button className="removeItem">X</button>
+							<div>x {x[2]}</div>
+							<button id={x} onClick={this.removeItem} className="removeItem">X</button>
 						</div>
 				</div>
 			})
@@ -129,6 +134,7 @@ class Nav extends Component {
     onChangeSort: PropTypes.func,
     onChangeBag: PropTypes.func,
     bag: PropTypes.array,
+    onRemoveItem: PropTypes.func
    }
 
   constructor(props) {
@@ -205,7 +211,7 @@ class Nav extends Component {
 						onMouseLeave={this.toggleBag} 
 						className="bag">
 							BAG
-							<BagMenu bag={this.props.bag} onChange={this.props.onChangeBag} show={showBag}/>
+							<BagMenu onRemoveItem={this.props.onRemoveItem} bag={this.props.bag} onChange={this.props.onChangeBag} show={showBag}/>
 					</div>
 				</div>
 			</div>

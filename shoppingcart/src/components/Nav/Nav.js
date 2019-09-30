@@ -2,6 +2,42 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import './Nav.css';
 import data from '../../data/products.json'
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/database';
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+
+const uiConfig = {
+  signInFlow: 'popup',
+  signInOptions: [
+    firebase.auth.GoogleAuthProvider.PROVIDER_ID
+  ],
+  callbacks: {
+    signInSuccessWithAuthResult: () => false
+  }
+};
+
+const Welcome = ({ user }) => (
+  <div>
+      Welcome, {user.displayName}
+      <button className="logout" primary onClick={() => firebase.auth().signOut()}>
+        Log out
+      </button>
+  </div>
+);
+
+const SignIn = () => (
+  <StyledFirebaseAuth
+    uiConfig={uiConfig}
+    firebaseAuth={firebase.auth()}
+  />
+);
+
+const Banner = ({ user, title }) => (
+  <div className="banner">
+    { user ? <Welcome user={ user } /> : <SignIn /> }
+  </div>
+);
 
 class FilterMenu extends Component {
 
@@ -134,7 +170,8 @@ class Nav extends Component {
     onChangeSort: PropTypes.func,
     onChangeBag: PropTypes.func,
     bag: PropTypes.array,
-    onRemoveItem: PropTypes.func
+    onRemoveItem: PropTypes.func,
+    user: PropTypes.string
    }
 
   constructor(props) {
@@ -190,28 +227,33 @@ class Nav extends Component {
 
 		return (
 			<div id="nav" className="nav"> 
-				<div>SHOPPING CART</div>
-				<div className="navbuttons">
-					<div 
-						onMouseEnter={this.toggleFilter} 
-						onMouseLeave={this.toggleFilter} 
-						className="filter">
-							FILTER
-							<FilterMenu onChange={this.props.onChangeFilter} show={showFilter}/>
-					</div>
-					<div 
-						onMouseEnter={this.toggleSort} 
-						onMouseLeave={this.toggleSort} 
-						className="sort">
-							SORT
-							<SortMenu onChange={this.props.onChangeSort} show={showSort}/>
-					</div>
-					<div 
-						onMouseEnter={this.toggleBag}
-						onMouseLeave={this.toggleBag} 
-						className="bag">
-							BAG
-							<BagMenu onRemoveItem={this.props.onRemoveItem} bag={this.props.bag} onChange={this.props.onChangeBag} show={showBag}/>
+				<div className="navtop">
+					<div>SHOPPING CART</div>
+				</div>
+				<div className="navbottom">
+					<Banner user={this.props.user}/>
+					<div className="navbuttons">
+						<div 
+							onMouseEnter={this.toggleFilter} 
+							onMouseLeave={this.toggleFilter} 
+							className="filter">
+								FILTER
+								<FilterMenu onChange={this.props.onChangeFilter} show={showFilter}/>
+						</div>
+						<div 
+							onMouseEnter={this.toggleSort} 
+							onMouseLeave={this.toggleSort} 
+							className="sort">
+								SORT
+								<SortMenu onChange={this.props.onChangeSort} show={showSort}/>
+						</div>
+						<div 
+							onMouseEnter={this.toggleBag}
+							onMouseLeave={this.toggleBag} 
+							className="bag">
+								BAG
+								<BagMenu onRemoveItem={this.props.onRemoveItem} bag={this.props.bag} onChange={this.props.onChangeBag} show={showBag}/>
+						</div>
 					</div>
 				</div>
 			</div>

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import data from '../../data/products.json'
 import './Product.css';
+import data from '../../data/products.json'
 
 class Product extends Component {
   
@@ -68,6 +68,7 @@ class Product extends Component {
 class Products extends Component {
 
   static propTypes = {
+  	products: PropTypes.array,
     displaySizes: PropTypes.array,
     sort: PropTypes.string,
     onClick: PropTypes.func,
@@ -94,8 +95,8 @@ class Products extends Component {
 	}
 
 	render() {
-
-		const products = Object.values(data)
+		
+ 		const products = Object.values(data)
 
 		const {displaySizes, sort, inventory} = this.props
 

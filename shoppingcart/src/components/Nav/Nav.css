@@ -2,25 +2,51 @@
 	background: black;
 	color: white;
 	padding: 0 24px 0;
-	height: 64px;
+	height: 120px;
 	display: flex;
 	font-family: DIN Condensed;
 	font-size: 48px;
 	align-items: center;
 	display: grid;
-	grid-template-columns: auto auto;
+	grid-template-rows: 64px 32px;
 	z-index: 2;
 	width: calc(100% - 48px);
 	min-width: 600px;
 }
 
+.navbottom {
+	display: grid;
+	grid-template-columns: auto auto;
+	align-items: center;
+}
+
+.logout {
+	font-family: DIN Condensed;
+	font-size: 24px;
+	display: inline-block;
+	align-items: center;
+	justify-content: center;
+	padding: 4px;
+	background: white;
+	border: none;
+	outline: none;
+	border-radius: 4px;
+	margin-left: 16px;
+}
+
+.banner {
+	font-size: 24px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
 .sticky {
   position: fixed;
   top: 0;
 }
 
 .sticky + .productList {
-	padding-top: 128px;
+	padding-top: 184px;
 }
 
 .navbuttons {

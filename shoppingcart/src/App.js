@@ -3,23 +3,71 @@ import Products from './components/Product/Product.js'
 import Nav from './components/Nav/Nav.js'
 import inventory from './data/inventory.json'
 import './App.css';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/database';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCZaprrPffgjHeBId-qPSbnI4vY4Tqwpug",
+  authDomain: "shoppingcart-9396b.firebaseapp.com",
+  databaseURL: "https://shoppingcart-9396b.firebaseio.com",
+  projectId: "shoppingcart-9396b",
+  storageBucket: "shoppingcart-9396b.appspot.com",
+  messagingSenderId: "551529945617",
+  appId: "1:551529945617:web:6dbb9303101431a2682fb0"
+};
+
+firebase.initializeApp(firebaseConfig);
 
 
 class App extends Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
     sizes: [],
     sort: null,
     bag: null,
     inventory: inventory,
+    inventory2: null,
+    products: null,
     showError: false,
     showAdded: false,
     showOutOfStock: false,
+    authUser: null,
     };
   }
+
+  componentDidMount() {
+
+      firebase.auth().onAuthStateChanged(authUser => {
+      authUser
+        ? this.setState({ authUser })
+        : this.setState({ authUser: null });
+    });
+
+      let prods = firebase.database().ref('products');
+      prods.on("value", (data) => {
+        let products = [];
+        data.forEach((child) => {
+            products.push(child.val());
+        });
+        this.setState({
+          products: products
+        })
+      });
+    let inv = firebase.database().ref('inventory');
+    inv.on("value", (data) => {
+      let inventory = [];
+      data.forEach((child) => {
+          inventory.push(child.val());
+      });
+      this.setState({
+        inventory2: inventory
+      })
+    });
+    }
+
 
   filterSizes = (e) => {
 
@@ -200,12 +248,11 @@ class App extends Component {
 
   render () {
 
-    const {showError, bag, showAdded, showOutOfStock} = this.state
-
+    const {showError, bag, showAdded, showOutOfStock, authUser} = this.state
      return (
         <div>
-         <Nav onRemoveItem={this.removeFromBag} bag={bag} onChangeFilter={this.filterSizes} onChangeSort={this.sortPrice}/>
-         <Products inventory={this.state.inventory} onClick={this.addToBag} sort={this.state.sort} displaySizes={this.state.sizes}/> 
+         <Nav user={authUser} onRemoveItem={this.removeFromBag} bag={bag} onChangeFilter={this.filterSizes} onChangeSort={this.sortPrice}/>
+         <Products products={this.state.products} inventory={this.state.inventory} onClick={this.addToBag} sort={this.state.sort} displaySizes={this.state.sizes}/> 
          {showError ? <div className="error" id="error">Please select a size.</div> : null}
          {showAdded ? <div className="added" id="added">Item added to bag.</div> : null}     
           {showOutOfStock ? <div className="error" id="error">Out of stock.</div> : null}

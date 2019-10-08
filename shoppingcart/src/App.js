@@ -19,6 +19,7 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
+const inv = firebase.database().ref();
 
 class App extends Component {
 
@@ -27,14 +28,14 @@ class App extends Component {
     this.state = {
     sizes: [],
     sort: null,
-    bag: null,
-    inventory: inventory,
+    bag: [],
+    inventory: null,
     inventory2: null,
-    products: null,
     showError: false,
     showAdded: false,
     showOutOfStock: false,
     authUser: null,
+    userData: null
     };
   }
 
@@ -46,26 +47,18 @@ class App extends Component {
         : this.setState({ authUser: null });
     });
 
-      let prods = firebase.database().ref('products');
-      prods.on("value", (data) => {
-        let products = [];
-        data.forEach((child) => {
-            products.push(child.val());
-        });
-        this.setState({
-          products: products
-        })
-      });
-    let inv = firebase.database().ref('inventory');
+
     inv.on("value", (data) => {
       let inventory = [];
       data.forEach((child) => {
           inventory.push(child.val());
       });
       this.setState({
-        inventory2: inventory
+        inventory: (inventory[1]),
+        userData: (inventory[0])
       })
     });
+
     }
 
 
@@ -154,6 +147,16 @@ class App extends Component {
       this.setState({
         inventory: newInv
       })
+      firebase.database().ref('inventory').set(newInv)
+      let newUser = {
+        uid: this.state.authUser.uid,
+        bag: this.state.bag,
+      };
+      let updates = {};
+      updates['/cart/' + newUser.uid] = newUser;
+      firebase.database().ref().update(updates);
+
+
     }  
      else {
       this.showError()
@@ -221,6 +224,14 @@ class App extends Component {
       bag: newBag,
       inventory: newInv
     })
+    firebase.database().ref('inventory').set(newInv)
+    let newUser = {
+        uid: this.state.authUser.uid,
+        bag: this.state.bag,
+      };
+    let updates = {};
+    updates['/cart/' + newUser.uid] = newUser;
+    firebase.database().ref().update(updates);
   }
 
     showError = () => {
@@ -248,11 +259,18 @@ class App extends Component {
 
   render () {
 
-    const {showError, bag, showAdded, showOutOfStock, authUser} = this.state
+
+    const {userData, showError, bag, showAdded, showOutOfStock, authUser} = this.state
      return (
         <div>
+        {(authUser && userData) ?
+          <Nav user={authUser} onRemoveItem={this.removeFromBag} bag={userData[authUser.uid].bag} onChangeFilter={this.filterSizes} onChangeSort={this.sortPrice}/>
+          :
          <Nav user={authUser} onRemoveItem={this.removeFromBag} bag={bag} onChangeFilter={this.filterSizes} onChangeSort={this.sortPrice}/>
-         <Products products={this.state.products} inventory={this.state.inventory} onClick={this.addToBag} sort={this.state.sort} displaySizes={this.state.sizes}/> 
+        }
+         {this.state.inventory ?
+         <Products inventory={this.state.inventory} onClick={this.addToBag} sort={this.state.sort} displaySizes={this.state.sizes}/>
+         : null}
          {showError ? <div className="error" id="error">Please select a size.</div> : null}
          {showAdded ? <div className="added" id="added">Item added to bag.</div> : null}     
           {showOutOfStock ? <div className="error" id="error">Out of stock.</div> : null}
